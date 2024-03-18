@@ -7,32 +7,53 @@
       </div>
       <div class="title">마라톤, 그란폰도 이미지 검색기</div>
       <div class="search-container">
-        <input type="text" v-model="searchQuery" placeholder="Search...">
-        <button @click="submitSearch">Search</button>
+        <input type="text" v-model="searchQuery" :disabled="isSearching" placeholder="Search...">
+        <button @click="submitSearch" :disabled="isSearching">Search</button>
       </div>
+      <!--  검색중 상태를 표시하는 메시지 -->
+      <div v-if="isSearching" class="searching-status">Searching... Please wait.</div>
     </div>
   </template>
 
 
   
   <script>
-  import { searchService } from '@/services/searchService';
+  import * as searchService from '@/services/searchService';
 
   export default {
     data() {
       return {
         searchQuery: '',
+        isSearching: false
       };
     },
     methods: {
-      submitSearch() {
-        // 검색 로직 구현
-        searchService.searchImages(this.searchQuery);
-        console.log('Search query:', this.searchQuery);
-      },
-    },
+      async submitSearch() {
+        this.isSearching = true;
+        let rankList = [];
+        try {
+          const response = await searchService.fullTextVectorSearch(this.searchQuery, 3403);
+          const matchedRankList = response.data.matches;
+          console.log('matchedRankList:', matchedRankList);
+          for (let i = 0; i++; i < matchedRankList.length) {
+            console.log('matchedRankList[i]:', matchedRankList[i]['id']);
+            rankList.push(matchedRankList[i]['id']);
+          }
+        } catch (error) {
+          console.error('Search error:', error);
+        } finally {
+          this.isSearching = false;
+          console.log('rankList:', rankList);
+          this.$router.push({ 
+            name: 'search-results',
+            query: { rankList: rankList }
+          });
+        }
+      }
+    }
   };
   </script>
+
   
   <style>
   body, html {
@@ -83,6 +104,13 @@
     align-items: center;
   }
   
+  .searching-status {
+    color: #fff; /* 글자색 */
+    font-size: 18px; /* 글자 크기 */
+    margin-top: 10px; /* 상단 여백 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+  }
+
   input[type="text"] {
     padding: 10px;
     font-size: 16px;

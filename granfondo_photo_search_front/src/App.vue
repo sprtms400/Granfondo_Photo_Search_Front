@@ -27,7 +27,7 @@ export default {
     async fetchImages(searchQuery) {
       this.isLoading = true; // 검색 시작 시 로딩 상태를 true로 설정
       try {
-        const response = await axios.get(`YOUR_BACKEND_URL/search/images?q=${searchQuery}`);
+        const response = await axios.get(`http://localhost:3000/photo/search/vector?natural_query=${searchQuery}`);
         this.images = response.data.images;
       } catch (error) {
         console.error("Error fetching images:", error);
