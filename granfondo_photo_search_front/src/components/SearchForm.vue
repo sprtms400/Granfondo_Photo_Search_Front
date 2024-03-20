@@ -12,47 +12,69 @@
       </div>
       <!--  검색중 상태를 표시하는 메시지 -->
       <div v-if="isSearching" class="searching-status">Searching... Please wait.</div>
+      <router-view :key="$route.fullPath"></router-view>
     </div>
   </template>
 
 
   
   <script>
-  import * as searchService from '@/services/searchService';
+import * as searchService from '@/services/searchService';
 
-  export default {
-    data() {
-      return {
-        searchQuery: '',
-        isSearching: false
-      };
-    },
-    methods: {
-      async submitSearch() {
-        this.isSearching = true;
-        let rankList = [];
-        try {
-          const response = await searchService.fullTextVectorSearch(this.searchQuery, 3403);
-          const matchedRankList = response.data.matches;
-          console.log('matchedRankList:', matchedRankList);
-          for (let i = 0; i++; i < matchedRankList.length) {
-            console.log('matchedRankList[i]:', matchedRankList[i]['id']);
-            rankList.push(matchedRankList[i]['id']);
-          }
-        } catch (error) {
-          console.error('Search error:', error);
-        } finally {
-          this.isSearching = false;
-          console.log('rankList:', rankList);
-          this.$router.push({ 
-            name: 'search-results',
-            query: { rankList: rankList }
-          });
-        }
-      }
+export default {
+  data() {
+    return {
+      searchQuery: '',
+      isSearching: false
+    };
+  },
+  created() {
+    this.fetchRankList();
+  },
+  watch: {
+    // $route 객체를 감시합니다.
+    '$route'(to, from) {
+      // 라우트 변경이 감지될 때마다 fetchRankList 메소드를 호출합니다.
+      console.log('Route changed:', to, from);
+      // this.fetchRankList();
     }
-  };
-  </script>
+  },
+  methods: {
+    async submitSearch() {
+      this.isSearching = true;
+      let rankList = [];
+      try {
+        const response = await searchService.fullTextVectorSearch(this.searchQuery, 3403);
+        const matchedRankList = response.data.matches;
+        for (let i = 0; i < matchedRankList.length; i++) {
+          rankList.push(matchedRankList[i]['id']);
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+      } finally {
+        this.isSearching = false;
+        this.$router.push({ 
+          name: 'search-results',
+          query: { rankList: rankList } // 이 부분이 주석 처리되어 있는데, 필요에 따라 주석을 해제하고 쿼리 파라미터를 넘겨주어야 합니다.
+        });
+      }
+    },
+    // fetchRankList() {
+    //   // URL에서 rankList 쿼리 파라미터를 읽어옵니다.
+    //   // 컴포넌트 생성 시와 라우트 변경 시에 호출됩니다.
+    //   const rankListParam = this.$route.query.rankList;
+    //   // 쿼리 파라미터의 타입에 따라 처리하는 로직
+    //   if (Array.isArray(rankListParam)) {
+    //     this.rankList = rankListParam;
+    //   } else if (typeof rankListParam === 'string') {
+    //     this.rankList = [rankListParam];
+    //   } else {
+    //     console.error('Invalid or missing rankList query parameter');
+    //   }
+    // }
+  }
+};
+</script>
 
   
   <style>

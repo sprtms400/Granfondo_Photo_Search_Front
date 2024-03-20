@@ -3,6 +3,7 @@
     <SearchForm @search="fetchImages" />
     <div v-if="isLoading" class="spinner"></div> <!-- 로딩 스피너 추가 -->
     <ImageList v-if="!isLoading" :images="images" />
+    <!-- <router-view :key="$route.fullPath"></router-view> -->
   </div>
 </template>
 
