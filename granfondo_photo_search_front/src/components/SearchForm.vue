@@ -1,24 +1,24 @@
-  <template>
-    <div>
-      <div class="title-images-container">
-        <img src="../assets/title.webp" alt="Before Analysis" class="title-image-left"/>
-        <i class="fas fa-cog analysis-icon"></i> <!-- 돋보기 아이콘에서 기어 아이콘으로 변경 -->
-        <img src="../assets/annotated_title.jpg" alt="After Analysis" class="title-image-right"/>
-      </div>
-      <div class="title">마라톤, 그란폰도 이미지 검색기</div>
-      <div class="search-container">
-        <input type="text" v-model="searchQuery" :disabled="isSearching" placeholder="Search...">
-        <button @click="submitSearch" :disabled="isSearching">Search</button>
-      </div>
-      <!--  검색중 상태를 표시하는 메시지 -->
-      <div v-if="isSearching" class="searching-status">Searching... Please wait.</div>
-      <router-view :key="$route.fullPath"></router-view>
+<template>
+  <div>
+    <div class="title-images-container">
+      <img src="../assets/title.webp" alt="Before Analysis" class="title-image-left"/>
+      <i class="fas fa-cog analysis-icon"></i> <!-- 돋보기 아이콘에서 기어 아이콘으로 변경 -->
+      <img src="../assets/annotated_title.jpg" alt="After Analysis" class="title-image-right"/>
     </div>
-  </template>
+    <div class="title">마라톤, 그란폰도 이미지 검색기</div>
+    <div class="search-container">
+      <input type="text" v-model="searchQuery" :disabled="isSearching" placeholder="Search...">
+      <button @click="submitSearch" :disabled="isSearching">Search</button>
+    </div>
+    <!--  검색중 상태를 표시하는 메시지 -->
+    <div v-if="isSearching" class="searching-status">Searching... Please wait.</div>
+    <router-view :key="$route.fullPath"></router-view>
+  </div>
+</template>
 
 
   
-  <script>
+<script>
 import * as searchService from '@/services/searchService';
 
 export default {

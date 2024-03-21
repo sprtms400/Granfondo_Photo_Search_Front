@@ -10,7 +10,11 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/search-page',
+      redirect: '/search'
+    },
+    {
+      path: '/search',
+      name: 'search-page',
       component: SearchPage
     },
     {
