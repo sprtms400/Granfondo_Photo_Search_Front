@@ -31,6 +31,7 @@ export default {
   },
   data() {
     return {
+      selectedCompetition: '',
       rankList: [],
       photosInfo: [],
       itemsPerPage: 40,
@@ -45,12 +46,18 @@ export default {
     this.loadPageData();
   },
   watch: {
+    '$route.query.selectedCompetition': {
+      immediate: true,
+      handler() {
+        this.selectedCompetition = this.$route.query.selectedCompetition;
+      }
+    },
     '$route.query.rankList': {
-        immediate: true,
-        handler() {
+      immediate: true,
+      handler() {
         this.initPage();
         this.loadPageData(); // 데이터 로딩 메서드 호출
-        }
+      }
     }
   },
   methods: {
@@ -67,7 +74,7 @@ export default {
 
         let photoDatas = response.data;
         for (let i = 0 ; i < photoDatas.length ; i++) {
-            photoDatas[i].imageUrl = await photoManager.photoURL_assembler_original('2023상주그란폰도', photoDatas[i].photoId);
+            photoDatas[i].imageUrl = await photoManager.photoURL_assembler_original(this.selectedCompetition, photoDatas[i].photoId);
         }
         this.photosInfo = photoDatas;
         console.log('this.photosInfo : ', this.photosInfo)
@@ -99,8 +106,8 @@ export default {
             let annotated_image_url = '';
             let numberplate_image_url = '';
             if (photo.isPhotoAnalyzedNumberPlate === true) {
-                annotated_image_url = await photoManager.photoURL_annotated_image('2023상주그란폰도', photo.photoId);
-                numberplate_image_url = await photoManager.photoURL_cropped_number_plate_image('2023상주그란폰도', photo.photoId);
+                annotated_image_url = await photoManager.photoURL_annotated_image(this.selectedCompetition, photo.photoId);
+                numberplate_image_url = await photoManager.photoURL_cropped_number_plate_image(this.selectedCompetition, photo.photoId);
                 console.log('numberplate_image_url : ', numberplate_image_url)
             }
             photo.annotated_image_url = annotated_image_url

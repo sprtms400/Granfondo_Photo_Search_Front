@@ -2,25 +2,30 @@
   <div>
     <div class="title-images-container">
       <img src="../assets/title.webp" alt="Before Analysis" class="title-image-left"/>
-      <i class="fas fa-cog analysis-icon"></i>
+      <i class="fas fa-cog analysis-icon"></i> <!-- 돋보기 아이콘에서 기어 아이콘으로 변경 -->
       <img src="../assets/annotated_title.jpg" alt="After Analysis" class="title-image-right"/>
     </div>
     <div class="title">마라톤, 그란폰도 이미지 검색기</div>
     <div class="search-container">
-      <select v-model="selectedCompetition" @change="selectingComp()">
+      <!-- 대회 선택 박스 -->
+      <select v-model="selectedCompetition" @change="onCompetitionChange">
         <option disabled value="">대회 선택...</option>
-        <option v-for="competition in competitions" :key="competition" :value="competition">
-          {{ competition }}
+        <option v-for="competition in competitions" :key="competition.id" :value="competition.id">
+          {{ competition.name }}
         </option>
       </select>
-      <input type="text" v-model="searchQuery" :disabled="!selectedCompetition || isSearching" :placeholder="inputPlaceholder">
-      <button @click="submitSearch" :disabled="!selectedCompetition || isSearching">Search</button>
+      <!-- 검색박스 -->
+      <input type="text" v-model="searchQuery" :disabled="isSearching" placeholder="Search...">
+      <button @click="submitSearch" :disabled="isSearching">Search</button>
     </div>
+    <!--  검색중 상태를 표시하는 메시지 -->
     <div v-if="isSearching" class="searching-status">Searching... Please wait.</div>
     <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
 
+
+  
 <script>
 import * as compManager from '@/services/compManager';
 import * as searchService from '@/services/searchService';
@@ -30,40 +35,31 @@ export default {
     return {
       searchQuery: '',
       isSearching: false,
-      competitions: [],
-      selectedCompetition: '',
+      competitions: [], // 대회 목록 데이터
+      selectedCompetition: '', //선택된 대회 ID
     };
   },
   created() {
     this.fetchCompetitions();
   },
-  computed: {
-    inputPlaceholder() {
-      // 대회가 선택되지 않았다면 안내 메시지 표시, 선택되었다면 검색창 활성화
-      return this.selectedCompetition ? "Search..." : "대회를 먼저 선택해주세요";
+  watch: {
+    // $route 객체를 감시합니다.
+    '$route'(to, from) {
+      // 라우트 변경이 감지될 때마다 fetchRankList 메소드를 호출합니다.
+      console.log('Route changed:', to, from);
+      // this.fetchRankList();
     }
   },
   methods: {
-    selectingComp() {
-      console.log('this.selectedCompetition: ', this.selectedCompetition);
-    },
-    async fetchCompetitions() {
-      try {
-        const response = await compManager.getCompetitions();
-        let compNameList = [];
-        for (let i = 0; i < response.data.length; i++) {
-          compNameList.push(response.data[i].name);
-        }
-        this.competitions = compNameList;
-      } catch (error) {
-        console.error("Failed to fetch competitions:", error);
-      }
+    async getCompList() {
+      const response = await compManager.getCompList();
+      this.competitions = response;
     },
     async submitSearch() {
       this.isSearching = true;
       let rankList = [];
       try {
-        const response = await searchService.fullTextVectorSearch(this.searchQuery, 3404);
+        const response = await searchService.fullTextVectorSearch(this.searchQuery, 3403);
         const matchedRankList = response.data.matches;
         for (let i = 0; i < matchedRankList.length; i++) {
           rankList.push(matchedRankList[i]['id']);
@@ -72,15 +68,12 @@ export default {
         console.error('Search error:', error);
       } finally {
         this.isSearching = false;
-        this.$router.push({
+        this.$router.push({ 
           name: 'search-results',
-          query: { 
-            rankList: rankList,
-            selectedCompetition: this.selectedCompetition,
-          }
+          query: { rankList: rankList } // 이 부분이 주석 처리되어 있는데, 필요에 따라 주석을 해제하고 쿼리 파라미터를 넘겨주어야 합니다.
         });
       }
-    }
+    },
   }
 };
 </script>
@@ -101,14 +94,14 @@ body, html {
 /* select 박스 스타일링 */
 select {
   padding: 10px;
-  font-size: 15px;
-  background-color: #555;
-  color: white;
-  border: 1px solid #777;
-  border-radius: 5px;
-  outline: none;
-  cursor: pointer;
-  margin-right: 10px;
+  font-size: 16px;
+  background-color: #555; /* 배경색 설정 */
+  color: white; /* 글자색 설정 */
+  border: 1px solid #777; /* 테두리 설정 */
+  border-radius: 5px; /* 모서리 둥글게 설정 */
+  outline: none; /* 포커스 시 테두리 제거 */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
+  margin-right: 10px; /* 오른쪽 여백 설정 */
 }
 
 /* select 박스 화살표 스타일 커스텀 (선택적) */
