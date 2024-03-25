@@ -135,9 +135,9 @@ export default {
   cursor: pointer;
 }
 
-/* 캘러리 스타일 */
+/* 갤러리 스타일 */
 .gallery {
-  margin-top: 4800px;
+  margin-top: 4800px; /* 4800 px */
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
