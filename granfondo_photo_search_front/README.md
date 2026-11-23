@@ -1,4 +1,4 @@
-# granfondo_photo_search_front
+# 픽마이레이스(PickMyRace) 웹 개발 환경
 
 ## Project setup
 ```

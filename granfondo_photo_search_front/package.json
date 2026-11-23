@@ -2,6 +2,7 @@
   "name": "granfondo_photo_search_front",
   "version": "0.1.0",
   "private": true,
+  "description": "PickMyRace web interface for finding race photos by appearance",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

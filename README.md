@@ -1,8 +1,8 @@
-# Granfondo Photo Search — 웹 화면
+# 픽마이레이스(PickMyRace) 웹
 
-마라톤·그란폰도 대회 사진 검색 서비스의 사용자 화면이다. Vue 로 만들었다.
+마라톤·그란폰도 대회를 고르고 옷차림이나 자전거 특징을 입력하면 내 사진을 찾을 수 있다. Vue로 만든 픽마이레이스의 검색 화면이다.
 
-> 2024년 작업이다. 서버 쪽은 [Granfondo_Photo_Search](https://github.com/sprtms400/Granfondo_Photo_Search) 에 있다.
+> 2024년 작업이다. 서버 쪽은 [픽마이레이스 API](https://github.com/sprtms400/Granfondo_Photo_Search)에 있다.
 
 ---
 
@@ -18,7 +18,7 @@
 
 ## 3. 향후 과제
 
-대회 목록이 늘어났을 때의 화면 구성, 그리고 배번호 검색이 서버에 붙으면 그에 맞는 입력 방식이 필요하다.
+대회 목록이 길어졌을 때의 선택 화면과 배번 검색 입력이 이 공개 버전의 후속 작업이다.
 
 ---
 
@@ -60,9 +60,9 @@
 
 ```
 nvm install 20.11
-npm install -g yarn @vue/cli
-yarn install
-vue serve
+cd granfondo_photo_search_front
+npm ci
+npm run serve
 ```
 
 Ubuntu 20.04, Node 20.11 에서 개발했다.
@@ -70,6 +70,6 @@ Ubuntu 20.04, Node 20.11 에서 개발했다.
 ## 4. 한계점
 
 - 대회가 하나뿐일 때를 전제로 만들어서, 목록이 길어지면 선택 화면을 다시 짜야 한다.
-- 배번호 검색 입력이 없다. 서버에 그 기능이 아직 붙어 있지 않아서다.
+- 이 공개 버전의 검색창은 인상착의를 입력받는다.
 - 결과 이미지에 지연 로딩이나 썸네일 처리가 없다. 결과가 많으면 느려진다.
 - 테스트 코드가 없다.

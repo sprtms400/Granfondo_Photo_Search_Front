@@ -5,7 +5,7 @@
       <i class="fas fa-cog analysis-icon"></i>
       <img src="../assets/annotated_title.jpg" alt="After Analysis" class="title-image-right"/>
     </div>
-    <div class="title">마라톤, 그란폰도 이미지 검색기</div>
+    <h1 class="title">픽마이레이스(PickMyRace)</h1>
     <div class="search-container">
       <select v-model="selectedCompetition" @change="selectingComp()">
         <option disabled value="">대회 선택...</option>
